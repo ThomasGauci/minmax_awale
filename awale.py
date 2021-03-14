@@ -24,7 +24,7 @@ def jouer(joueur,case,plateau):
                     print("Le joueur 2 joue la case : " + str(case) + " avec " + str(plateau[case]) + " graines")
                     coup(joueur,case,plateau)
     
-    #print(plateau)
+    #print(plateau)git
 
 def coup(joueur,case,plateau):    
     lastCase = case
