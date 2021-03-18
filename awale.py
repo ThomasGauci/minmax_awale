@@ -90,17 +90,29 @@ def min_max(plateauMinMax,joueur,profondeur):
                     d = min_max(plateauMinMax,1,c)
         #print("Gain plateau : " + str(p) + " valeur des descendants : " + str(d))
     if profondeur == 4:
-        print("Meilleur coup : " + str(meilleurCoup))
+        print(str(meilleurCoup+1))
     return meilleurCoup #je renvoie le meilleur coup ducoup
     
 # Joueur 1 commence
 #plateauInit = [6,6,6,6,6,6,2,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6]
 plateauInit = [4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]
-min_max(plateauInit,1,3)
+#min_max(plateauInit,1,3)
 
+"""
 for x in range (10):
     print(plateau)
     jouer(1,min_max(plateau,1,4),plateau)
     jouer(2,min_max(plateau,2,4),plateau)
     print(score)
+"""
+
+
+while 1:
+    print("coup j1 : ")
+    jouer(1,min_max(plateau,1,4),plateau)
+    c2 = input("coup j2 : ")
+    jouer(2,int(c2)-1,plateau)
+
+
+
 # faire fin du jeu
