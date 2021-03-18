@@ -10,7 +10,7 @@ def jouer(joueur,case,plateau):
     else:
         if plateau[case] == 0:
               print("erreur : coup illegal")
-              print(plateau)
+              print(joueur,case,plateau)
         else:
             if joueur == 1:
                 if case % 2 != 0:
@@ -53,15 +53,17 @@ def check_ramassage(joueur,case,plateau):
 def min_max(plateauMinMax,joueur,profondeur):
     #print("--------------------------------------------------------------")
     c = profondeur - 1
-    meilleurCoup = 0
     p = 0
     d = 0
+    meilleurCoup = 0
     if c != 0:
         for i in range(len(plateau)-1):
             plateauMinMax = []
             plateauMinMax.extend(plateau)
             if joueur == 1:
                 if plateauMinMax[i] != 0 and i%2 == 0 :
+                    while plateau[meilleurCoup] == 0:
+                        meilleurCoup += 2
                     jouer(1,i,plateauMinMax)
                     #print(plateau)
                     #print("Score : " + str(score[0]) + " " + str(p) )
@@ -72,6 +74,9 @@ def min_max(plateauMinMax,joueur,profondeur):
                     d = min_max(plateauMinMax,2,c)
             else :
                 if plateauMinMax[i] != 0 and i%2 != 0 :
+                    meilleurCoup = 1
+                    while plateau[meilleurCoup] == 0:
+                        meilleurCoup += 2
                     jouer(2,i,plateauMinMax)
                     #print(plateau)
                     #print("Score : " + str(-score[1]) + " " + str(p) )
@@ -81,18 +86,18 @@ def min_max(plateauMinMax,joueur,profondeur):
                     score[1] = 0
                     d = min_max(plateauMinMax,1,c)
         #print("Gain plateau : " + str(p) + " valeur des descendants : " + str(d))
-    if profondeur == 3:
+    if profondeur == 4:
         print("Meilleur coup : " + str(meilleurCoup))
-    return p - d
+    return meilleurCoup #je renvoie le meilleur coup ducoup
     
 # Joueur 1 commence
 #plateauInit = [6,6,6,6,6,6,2,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6]
-plateauInit = [4,4,4,4,4,4,2,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]
+plateauInit = [4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]
 min_max(plateauInit,1,3)
 
-for x in range (1):
+for x in range (10):
     print(plateau)
-    jouer(1,min_max(plateau,1,2),plateau)
-    jouer(2,min_max(plateau,2,2),plateau)
+    jouer(1,min_max(plateau,1,4),plateau)
+    jouer(2,min_max(plateau,2,4),plateau)
 
 # faire fin du jeu
