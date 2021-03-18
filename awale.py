@@ -1,6 +1,7 @@
 import numpy as np
 
 score = np.full(2,0)
+scoreMinMax = np.full(2,0)
 plateau = np.full(24,4)
 plateauGain = np.full(24,0)
 
@@ -41,12 +42,14 @@ def coup(joueur,case,plateau):
 def check_derniere_case(joueur,case,plateau):
     if(plateau[(case)%24] == 2 or plateau[(case)%24] == 3):
         score[joueur-1] += plateau[(case)%24]
+        scoreMinMax[joueur-1] += plateau[(case)%24]
         plateau[(case)%24] = 0
         check_ramassage(joueur,case-1,plateau)
 
 def check_ramassage(joueur,case,plateau):
     if(plateau[(case)%24] == 2 or plateau[(case)%24] == 3):
         score[joueur-1] += plateau[(case)%24]
+        scoreMinMax[joueur-1] += plateau[(case)%24]
         plateau[(case)%24] = 0  
         check_ramassage(joueur,case,plateau)     
 
@@ -67,10 +70,10 @@ def min_max(plateauMinMax,joueur,profondeur):
                     jouer(1,i,plateauMinMax)
                     #print(plateau)
                     #print("Score : " + str(score[0]) + " " + str(p) )
-                    if score[0] > p:
-                        p = score[0]
+                    if scoreMinMax[0] > p:
+                        p = scoreMinMax[0]
                         meilleurCoup = i
-                    score[0] = 0
+                    scoreMinMax[0] = 0
                     d = min_max(plateauMinMax,2,c)
             else :
                 if plateauMinMax[i] != 0 and i%2 != 0 :
@@ -80,10 +83,10 @@ def min_max(plateauMinMax,joueur,profondeur):
                     jouer(2,i,plateauMinMax)
                     #print(plateau)
                     #print("Score : " + str(-score[1]) + " " + str(p) )
-                    if -score[1] < p:
-                        p = -score[1]
+                    if -scoreMinMax[1] < p:
+                        p = -scoreMinMax[1]
                         meilleurCoup = i
-                    score[1] = 0
+                    scoreMinMax[1] = 0
                     d = min_max(plateauMinMax,1,c)
         #print("Gain plateau : " + str(p) + " valeur des descendants : " + str(d))
     if profondeur == 4:
@@ -99,5 +102,5 @@ for x in range (10):
     print(plateau)
     jouer(1,min_max(plateau,1,4),plateau)
     jouer(2,min_max(plateau,2,4),plateau)
-
+    print(score)
 # faire fin du jeu
