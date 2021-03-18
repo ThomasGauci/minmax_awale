@@ -1,4 +1,6 @@
 import numpy as np
+import time
+import pandas as pd
 
 score = np.full(2,0)
 scoreMinMax = np.full(2,0)
@@ -11,7 +13,6 @@ def jouer(joueur,case,plateau,minmax):
     else:
         if plateau[case] == 0:
               print("erreur : coup illegal")
-              print(joueur,case,plateau)
         else:
             if joueur == 1:
                 if case % 2 != 0:
@@ -94,7 +95,7 @@ def min_max(plateauMinMax,joueur,profondeur):
                     d = min_max(plateauMinMax,1,c)
         #print("Gain plateau : " + str(p) + " valeur des descendants : " + str(d))
     if profondeur == 4:
-        print(str(meilleurCoup+1))
+        print(str(meilleurCoup+1),end='')
     return meilleurCoup #je renvoie le meilleur coup ducoup
     
 # Joueur 1 commence
@@ -111,16 +112,33 @@ for x in range (10):
 """
 
 
+def separerPlateau(plateau):
+    arrayj1 = []
+    arrayj2 = []
+    indices = []
+    for x in range(len(plateau)):
+        if x%2!=1:
+            arrayj1.append(plateau[x])
+        else:
+            arrayj2.append(plateau[x])
+
+    indices.append(arrayj1)
+    indices.append(arrayj2)
+    indices.append(["13","14","15","16","17","18","19","21","22","23","24","25"])
+    dfj1 = pd.DataFrame(indices, index=["","",""], columns=["01","02","03","04","05","06","07","08","09","10","11","12"])
+    print(dfj1)
+
+
 while 1:
-    print("score: ")
-    print(score)
-    print("coup j1 : ")
+    print("====================================================")
+    print("-------------------------------------------------")
+    separerPlateau(plateau)
+    print("-------------------------------------------------")
+    print("coup j1 : ",end='')
+    start_time = time.time()
     jouer(1,min_max(plateau,1,4),plateau,False)
-    print(plateau)
+    print("  (%s s)" % round(time.time() - start_time,2))
     c2 = input("coup j2 : ")
     jouer(2,int(c2)-1,plateau,False)
-    print(plateau)
-
-
-
+    print(score)
 # faire fin du jeu
