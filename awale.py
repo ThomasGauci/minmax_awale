@@ -5,7 +5,7 @@ scoreMinMax = np.full(2,0)
 plateau = np.full(24,4)
 plateauGain = np.full(24,0)
 
-def jouer(joueur,case,plateau):
+def jouer(joueur,case,plateau,minmax):
     if joueur > 1 | case > 24:
         print("erreur : case ou joueur non existant")
     else:
@@ -18,40 +18,44 @@ def jouer(joueur,case,plateau):
                     print("erreur : coup illegal j1")
                 else:
                     #print("Le joueur 1 joue la case : " + str(case) + " avec " + str(plateau[case]) + " graines")
-                    coup(joueur,case,plateau)
+                    coup(joueur,case,plateau,minmax)
             if joueur == 2:
                 if case % 2 == 0:
                     print("erreur : coup illegal j2")
                 else:
                     #print("Le joueur 2 joue la case : " + str(case) + " avec " + str(plateau[case]) + " graines")
-                    coup(joueur,case,plateau)
+                    coup(joueur,case,plateau,minmax)
     
     #print(plateau)git
 
-def coup(joueur,case,plateau):    
+def coup(joueur,case,plateau,minmax):    
     lastCase = case
     for x in range(1,plateau[case]+1):
         plateau[(case+x)%24]=plateau[(case+x)%24]+1
         lastCase = (case+x)%24
-    check_derniere_case(joueur,lastCase,plateau)
+    check_derniere_case(joueur,lastCase,plateau,minmax)
     plateau[case] = 0
 
 # 1) quand il met sa graine dans la dernière case et qu'il reste 2 ou 3 graines dans la case
 # 2) soit par rammassage: si tu as pris les pions dans une case, alors tu regarde la case precedente, si elle contient 2 ou 3 pions alors tu prend les pions de la case et tu repetes le raisnnement
 
-def check_derniere_case(joueur,case,plateau):
+def check_derniere_case(joueur,case,plateau,minmax):
     if(plateau[(case)%24] == 2 or plateau[(case)%24] == 3):
-        score[joueur-1] += plateau[(case)%24]
-        scoreMinMax[joueur-1] += plateau[(case)%24]
+        if minmax:
+            scoreMinMax[joueur-1] += plateau[(case)%24]
+        else:
+            score[joueur-1] += plateau[(case)%24]
         plateau[(case)%24] = 0
-        check_ramassage(joueur,case-1,plateau)
+        check_ramassage(joueur,case-1,plateau,minmax)
 
-def check_ramassage(joueur,case,plateau):
+def check_ramassage(joueur,case,plateau,minmax):
     if(plateau[(case)%24] == 2 or plateau[(case)%24] == 3):
-        score[joueur-1] += plateau[(case)%24]
-        scoreMinMax[joueur-1] += plateau[(case)%24]
+        if minmax:
+            scoreMinMax[joueur-1] += plateau[(case)%24]
+        else:
+            score[joueur-1] += plateau[(case)%24]
         plateau[(case)%24] = 0  
-        check_ramassage(joueur,case,plateau)     
+        check_ramassage(joueur,case,plateau,minmax)     
 
 def min_max(plateauMinMax,joueur,profondeur):
     #print("--------------------------------------------------------------")
@@ -67,7 +71,7 @@ def min_max(plateauMinMax,joueur,profondeur):
                 if plateauMinMax[i] != 0 and i%2 == 0 :
                     while plateau[meilleurCoup] == 0:
                         meilleurCoup += 2
-                    jouer(1,i,plateauMinMax)
+                    jouer(1,i,plateauMinMax,True)
                     #print(plateau)
                     #print("Score : " + str(score[0]) + " " + str(p) )
                     if scoreMinMax[0] > p:
@@ -80,7 +84,7 @@ def min_max(plateauMinMax,joueur,profondeur):
                     meilleurCoup = 1
                     while plateau[meilleurCoup] == 0:
                         meilleurCoup += 2
-                    jouer(2,i,plateauMinMax)
+                    jouer(2,i,plateauMinMax,True)
                     #print(plateau)
                     #print("Score : " + str(-score[1]) + " " + str(p) )
                     if -scoreMinMax[1] < p:
@@ -108,10 +112,14 @@ for x in range (10):
 
 
 while 1:
+    print("score: ")
+    print(score)
     print("coup j1 : ")
-    jouer(1,min_max(plateau,1,4),plateau)
+    jouer(1,min_max(plateau,1,4),plateau,False)
+    print(plateau)
     c2 = input("coup j2 : ")
-    jouer(2,int(c2)-1,plateau)
+    jouer(2,int(c2)-1,plateau,False)
+    print(plateau)
 
 
 
